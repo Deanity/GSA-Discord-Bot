@@ -24,10 +24,13 @@ export async function execute(message: Message): Promise<void> {
     const botId = message.client.user?.id;
 
     if (botId) {
-      // Filter for bot's own previous messages that contain the template header
-      const previousTemplates = messages.filter(
-        msg => msg.author.id === botId && msg.content.includes('TEMPLATE PERKENALAN')
-      );
+      // Filter for bot's own previous messages that contain the template fields (ID or EN)
+      const previousTemplates = messages.filter(msg => {
+        if (msg.author.id !== botId) return false;
+        return msg.content.includes('TEMPLATE PERKENALAN') ||
+               msg.content.includes('Google Cloud Skills Boost Profile URL:') ||
+               msg.content.includes('This message will automatically remain at the bottom');
+      });
 
       if (previousTemplates.size > 0) {
         logger.debug(`Found ${previousTemplates.size} previous template messages. Deleting...`);

@@ -331,11 +331,11 @@ refactor: extract Google Calendar polling into calendar.service.ts
 
 ```
 # Done and working
-- [ ] (none yet — initial setup)
+- [x] Bot skeleton: client init, command/event loader
+- [x] Supabase schema: participants, submissions, xp_log tables
 
 # In progress — don't change without confirmation
-- [ ] Bot skeleton: client init, command/event loader
-- [ ] Supabase schema: participants, submissions, xp_log tables
+- [ ] (none yet)
 
 # Not started
 - [ ] /register — link Discord account to arcade participant record

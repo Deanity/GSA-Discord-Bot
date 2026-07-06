@@ -333,6 +333,7 @@ refactor: extract Google Calendar polling into calendar.service.ts
 # Done and working
 - [x] Bot skeleton: client init, command/event loader
 - [x] Supabase schema: participants, submissions, xp_log tables
+- [x] Welcome Embed message on new member join
 
 # In progress — don't change without confirmation
 - [ ] (none yet)

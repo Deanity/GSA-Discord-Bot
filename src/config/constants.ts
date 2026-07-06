@@ -29,21 +29,18 @@ export const SYSTEM = {
 } as const;
 
 export const TEMPLATES = {
-  INTRO_STICKY: `━━━━━━━━━━━━━━━━━━━━━
-📝 **TEMPLATE PERKENALAN (INTRODUCTION TEMPLATE)**
-━━━━━━━━━━━━━━━━━━━━━
-
-Yuk saling kenal! Silakan salin (copy) template di bawah ini, isi, lalu kirim ke channel ini:
+  INTRO_STICKY: `
+Let's get to know each other! Please copy the template below, fill it out, and send it to this channel:
 
 \`\`\`
-Nama Lengkap : 
-Asal Kampus  : 
-Jurusan/Prodi: 
-Tujuan Ikut  : 
-Hobi         : 
-Google Cloud Skills Boost Profile URL : 
+Full Name:
+College of Origin:
+Major/Study Program:
+Purpose of Participation:
+Hobby:
+Google Cloud Skills Boost Profile URL:
 \`\`\`
 
 ━━━━━━━━━━━━━━━━━━━━━
-*Pesan ini akan otomatis tetap berada di bagian paling bawah.*`
+*This message will automatically remain at the bottom.*`
 } as const;

@@ -27,3 +27,21 @@ export const SYSTEM = {
   FOOTER_TEXT: "Google Skills Arcade 2026 • Facilitator Bot",
   BRAND_NAME: "Google Skills Arcade 2026",
 } as const;
+
+export const TEMPLATES = {
+  INTRO_STICKY: 
+    `━━━━━━━━━━━━━━━━━━━━━\n` +
+    `📝 **TEMPLATE PERKENALAN (INTRODUCTION TEMPLATE)**\n` +
+    `━━━━━━━━━━━━━━━━━━━━━\n\n` +
+    `Yuk saling kenal! Silakan salin (copy) template di bawah ini, isi, lalu kirim ke channel ini:\n\n` +
+    `\`\`\`\n` +
+    `Nama Lengkap : \n` +
+    `Asal Kampus  : \n` +
+    `Jurusan/Prodi: \n` +
+    `Tujuan Ikut  : \n` +
+    `Hobi         : \n` +
+    `Google Cloud Skills Boost Profile URL : \n` +
+    `\`\`\`\n\n` +
+    `━━━━━━━━━━━━━━━━━━━━━\n` +
+    `*Pesan ini akan otomatis tetap berada di bagian paling bawah.*`
+} as const;

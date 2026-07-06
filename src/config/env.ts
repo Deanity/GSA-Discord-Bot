@@ -17,6 +17,7 @@ const envSchema = z.object({
   DEFAULT_REMINDER_CRON: z.string().default("0 20 * * *"),
   ARCADE_ROLE_ID: z.string().min(1, { message: "ARCADE_ROLE_ID is required" }),
   WELCOME_CHANNEL_ID: z.string().optional(),
+  INTRODUCTION_CHANNEL_ID: z.string().optional(),
   LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
 });
 

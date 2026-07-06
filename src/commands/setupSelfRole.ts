@@ -38,7 +38,7 @@ const setupSelfRoleCommand: Command = {
       const selfRoleEmbed = new EmbedBuilder()
         .setTitle("AMBIL GENDER ROLE KAMU")
         .setDescription(
-          `Pilih role gender kamu untuk memudahkan sapaan di server.\n` +
+          `Pilih role gender kamu untuk memudahkan sapaan di server.\n\n` +
           `<@&${ROLES.GENDER_MALE}>\n` +
           `<@&${ROLES.GENDER_FEMALE}>`
         )

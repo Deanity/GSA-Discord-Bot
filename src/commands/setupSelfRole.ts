@@ -48,13 +48,11 @@ const setupSelfRoleCommand: Command = {
         .setCustomId(`gender_role_${ROLES.GENDER_MALE}`)
         .setLabel(maleLabel)
         .setStyle(ButtonStyle.Primary)
-        .setEmoji('♂️');
 
       const buttonFemale = new ButtonBuilder()
         .setCustomId(`gender_role_${ROLES.GENDER_FEMALE}`)
         .setLabel(femaleLabel)
         .setStyle(ButtonStyle.Primary)
-        .setEmoji('♀️');
 
       const actionRow = new ActionRowBuilder<ButtonBuilder>()
         .addComponents(buttonMale, buttonFemale);

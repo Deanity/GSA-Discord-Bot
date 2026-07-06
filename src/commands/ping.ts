@@ -1,0 +1,15 @@
+import { SlashCommandBuilder, CommandInteraction } from 'discord.js';
+import { Command } from '../types/command.types.js';
+
+const pingCommand: Command = {
+  data: new SlashCommandBuilder()
+    .setName('ping')
+    .setDescription('Replies with Pong and latency!'),
+  async execute(interaction: CommandInteraction): Promise<void> {
+    const sent = await interaction.reply({ content: 'Pinging...', fetchReply: true });
+    const latency = sent.createdTimestamp - interaction.createdTimestamp;
+    await interaction.editReply(`Pong! 🏓 Latency is ${latency}ms.`);
+  }
+};
+
+export default pingCommand;

@@ -1,5 +1,6 @@
 import { Client, GatewayIntentBits, Collection } from 'discord.js';
 import { fileURLToPath, pathToFileURL } from 'url';
+import http from 'http';
 import fs from 'fs';
 import path from 'path';
 import { env } from './config/env.js';
@@ -84,6 +85,15 @@ async function bootstrap(): Promise<void> {
   await loadCommands();
   await loadEvents();
   
+  // Start simple HTTP health check server for Render Web Services
+  const port = process.env.PORT || 3000;
+  http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('GSA Discord Bot is active and healthy!');
+  }).listen(port, () => {
+    logger.info(`Health check server listening on port ${port}`);
+  });
+
   logger.info('Connecting to Discord...');
   await client.login(env.TOKEN);
 }

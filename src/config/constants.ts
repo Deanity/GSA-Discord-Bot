@@ -29,19 +29,21 @@ export const SYSTEM = {
 } as const;
 
 export const TEMPLATES = {
-  INTRO_STICKY: 
-    `━━━━━━━━━━━━━━━━━━━━━\n` +
-    `📝 **TEMPLATE PERKENALAN (INTRODUCTION TEMPLATE)**\n` +
-    `━━━━━━━━━━━━━━━━━━━━━\n\n` +
-    `Yuk saling kenal! Silakan salin (copy) template di bawah ini, isi, lalu kirim ke channel ini:\n\n` +
-    `\`\`\`\n` +
-    `Nama Lengkap : \n` +
-    `Asal Kampus  : \n` +
-    `Jurusan/Prodi: \n` +
-    `Tujuan Ikut  : \n` +
-    `Hobi         : \n` +
-    `Google Cloud Skills Boost Profile URL : \n` +
-    `\`\`\`\n\n` +
-    `━━━━━━━━━━━━━━━━━━━━━\n` +
-    `*Pesan ini akan otomatis tetap berada di bagian paling bawah.*`
+  INTRO_STICKY: `━━━━━━━━━━━━━━━━━━━━━
+📝 **TEMPLATE PERKENALAN (INTRODUCTION TEMPLATE)**
+━━━━━━━━━━━━━━━━━━━━━
+
+Yuk saling kenal! Silakan salin (copy) template di bawah ini, isi, lalu kirim ke channel ini:
+
+\`\`\`
+Nama Lengkap : 
+Asal Kampus  : 
+Jurusan/Prodi: 
+Tujuan Ikut  : 
+Hobi         : 
+Google Cloud Skills Boost Profile URL : 
+\`\`\`
+
+━━━━━━━━━━━━━━━━━━━━━
+*Pesan ini akan otomatis tetap berada di bagian paling bawah.*`
 } as const;

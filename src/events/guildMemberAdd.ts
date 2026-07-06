@@ -30,6 +30,7 @@ export async function execute(member: GuildMember): Promise<void> {
     }
 
     const welcomeEmbed = new EmbedBuilder()
+      
       .setTitle("SELAMAT DATANG DI ARCADE COMMUNITY!")
       .setDescription(
         `Selamat datang di server koordinasi resmi Google Skills Arcade 2026!\n\n` +
@@ -51,6 +52,7 @@ export async function execute(member: GuildMember): Promise<void> {
       .setTimestamp();
 
     await channel.send({
+      content: `**SELAMAT DATANG DI ARCADE COMMUNITY! ${member}**`,
       embeds: [welcomeEmbed]
     });
     

@@ -6,7 +6,8 @@ const pingCommand: Command = {
     .setName('ping')
     .setDescription('Replies with Pong and latency!'),
   async execute(interaction: CommandInteraction): Promise<void> {
-    const sent = await interaction.reply({ content: 'Pinging...', fetchReply: true });
+    await interaction.reply({ content: 'Pinging...' });
+    const sent = await interaction.fetchReply();
     const latency = sent.createdTimestamp - interaction.createdTimestamp;
     await interaction.editReply(`Pong! 🏓 Latency is ${latency}ms.`);
   }

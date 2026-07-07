@@ -4,7 +4,7 @@ export interface Database {
       sticky_messages: {
         Row: {
           channel_id: string;
-          type: 'embed' | 'content';
+          type: string;
           payload: string;
           last_message_id: string | null;
           created_at: string;
@@ -12,7 +12,7 @@ export interface Database {
         };
         Insert: {
           channel_id: string;
-          type: 'embed' | 'content';
+          type: string;
           payload: string;
           last_message_id?: string | null;
           created_at?: string;
@@ -20,7 +20,7 @@ export interface Database {
         };
         Update: {
           channel_id?: string;
-          type?: 'embed' | 'content';
+          type?: string;
           payload?: string;
           last_message_id?: string | null;
           created_at?: string;

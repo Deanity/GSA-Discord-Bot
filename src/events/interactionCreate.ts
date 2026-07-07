@@ -1,4 +1,4 @@
-import { Interaction, Events, Collection, GuildMember } from 'discord.js';
+import { Interaction, Events, Collection, GuildMember, PermissionFlagsBits } from 'discord.js';
 import { logger } from '../utils/logger.js';
 import { Command } from '../types/command.types.js';
 import { ROLES } from '../config/constants.js';
@@ -25,6 +25,19 @@ export async function execute(interaction: Interaction): Promise<void> {
       logger.error(`No command matching ${interaction.commandName} was found.`);
       await interaction.reply({ content: 'Command not found.', ephemeral: true });
       return;
+    }
+
+    // Protection System: Admin-only by default, unless explicitly marked as public
+    if (!command.isPublic) {
+      const member = interaction.member as GuildMember;
+      if (!member || !member.permissions.has(PermissionFlagsBits.Administrator)) {
+        await interaction.reply({ 
+          content: '❌ **Akses Ditolak:** Hanya anggota dengan izin Administrator yang dapat menggunakan perintah ini.', 
+          ephemeral: true 
+        });
+        logger.warn(`User ${interaction.user.tag} (${interaction.user.id}) tried to use slash command /${interaction.commandName} without Administrator permissions.`);
+        return;
+      }
     }
 
     logger.command(`User ${interaction.user.tag} (${interaction.user.id}) ran /${interaction.commandName}`);

@@ -11,5 +11,6 @@ export interface Command {
     | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup"> 
     | SlashCommandSubcommandsOnlyBuilder
     | SlashCommandOptionsOnlyBuilder;
+  isPublic?: boolean;
   execute(interaction: ChatInputCommandInteraction): Promise<void>;
 }

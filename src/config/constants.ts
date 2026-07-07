@@ -42,10 +42,5 @@ Google Cloud Skills Boost Profile URL:
 \`\`\`
 
 ━━━━━━━━━━━━━━━━━━━━━
-*This message will automatically remain at the bottom.*`
-} as const;
-
-export const ROLES = {
-  GENDER_MALE: '1523667631599521993',
-  GENDER_FEMALE: '1523667697970184274',
+*Pesan ini akan otomatis tetap berada di bagian paling bawah.*`
 } as const;

@@ -1,7 +1,6 @@
 import { Interaction, Events, Collection, GuildMember, PermissionFlagsBits } from 'discord.js';
 import { logger } from '../utils/logger.js';
 import { Command } from '../types/command.types.js';
-import { ROLES } from '../config/constants.js';
 
 interface ClientWithCommands {
   commands: Collection<string, Command>;
@@ -61,54 +60,8 @@ export async function execute(interaction: Interaction): Promise<void> {
     return;
   }
 
-  // 2. Handle Button Interactions (Gender Self-Roles)
+  // 2. Handle Button Interactions
   if (interaction.isButton()) {
-    const customId = interaction.customId;
-    
-    if (customId.startsWith('gender_role_')) {
-      const roleId = customId.replace('gender_role_', '');
-      const guild = interaction.guild;
-      
-      if (!guild) {
-        await interaction.reply({ content: 'Interaction can only be processed inside a guild.', ephemeral: true });
-        return;
-      }
-
-      await interaction.deferReply({ ephemeral: true });
-
-      try {
-        const member = interaction.member as GuildMember;
-        if (!member) {
-          await interaction.editReply('Could not fetch your server member profile.');
-          return;
-        }
-
-        const hasRole = member.roles.cache.has(roleId);
-        const opposingRoleId = roleId === ROLES.GENDER_MALE ? ROLES.GENDER_FEMALE : ROLES.GENDER_MALE;
-
-        if (hasRole) {
-          // Toggle off
-          await member.roles.remove(roleId);
-          await interaction.editReply(`Role <@&${roleId}> telah dihapus.`);
-          logger.info(`Removed gender role ${roleId} from user ${interaction.user.tag}`);
-        } else {
-          // Add role
-          await member.roles.add(roleId);
-          
-          // Exclusivity check: remove the opposing gender role if they hold it
-          if (member.roles.cache.has(opposingRoleId)) {
-            await member.roles.remove(opposingRoleId);
-            await interaction.editReply(`Role <@&${roleId}> telah diberikan, dan role <@&${opposingRoleId}> telah dihapus.`);
-            logger.info(`Granted gender role ${roleId} and removed opposing role ${opposingRoleId} for user ${interaction.user.tag}`);
-          } else {
-            await interaction.editReply(`Role <@&${roleId}> telah diberikan.`);
-            logger.info(`Granted gender role ${roleId} to user ${interaction.user.tag}`);
-          }
-        }
-      } catch (error) {
-        logger.error(`Error updating gender role for user ${interaction.user.tag}:`, error);
-        await interaction.editReply('Terjadi kesalahan saat memproses permintaan role Anda. Pastikan role bot berada di atas role gender.');
-      }
-    }
+    // Placeholder for future button interactions
   }
 }

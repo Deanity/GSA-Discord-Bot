@@ -1,7 +1,6 @@
 import { Message, Events, TextChannel } from 'discord.js';
-import { env } from '../config/env.js';
 import { logger } from '../utils/logger.js';
-import { TEMPLATES } from '../config/constants.js';
+import { getStickyConfig, updateLastMessageId } from '../services/sticky.service.js';
 
 export const name = Events.MessageCreate;
 export const once = false;
@@ -10,48 +9,54 @@ export async function execute(message: Message): Promise<void> {
   // Ignore messages sent by bots or outside guilds
   if (message.author.bot || !message.guild) return;
 
-  const introChannelId = env.INTRODUCTION_CHANNEL_ID;
-  
-  // Only execute in the designated introduction channel
-  if (!introChannelId || message.channelId !== introChannelId) return;
-
-  const channel = message.channel as TextChannel;
-  logger.info(`Message detected in introduction channel from ${message.author.tag} (${message.author.id})`);
-
   try {
-    // Fetch last 10 messages to scan for previous bot sticky messages
-    const messages = await channel.messages.fetch({ limit: 10 });
-    const botId = message.client.user?.id;
+    // Check if current channel has a sticky message configured
+    const sticky = await getStickyConfig(message.channelId);
+    if (!sticky) return;
 
-    if (botId) {
-      // Filter for bot's own previous messages that contain the template fields (ID or EN)
-      const previousTemplates = messages.filter(msg => {
-        if (msg.author.id !== botId) return false;
-        return msg.content.includes('TEMPLATE PERKENALAN') ||
-               msg.content.includes('Google Cloud Skills Boost Profile URL:') ||
-               msg.content.includes('This message will automatically remain at the bottom');
-      });
+    const channel = message.channel as TextChannel;
+    logger.debug(`Sticky message match found for channel ${message.channelId}. Repositioning...`);
 
-      if (previousTemplates.size > 0) {
-        logger.debug(`Found ${previousTemplates.size} previous template messages. Deleting...`);
-        
-        for (const [_, tempMsg] of previousTemplates) {
-          try {
-            await tempMsg.delete();
-          } catch (deleteErr) {
-            logger.warn(`Could not delete previous sticky message ${tempMsg.id}:`, deleteErr);
-          }
+    // 1. Delete the previous sticky message from Discord if it exists
+    if (sticky.last_message_id) {
+      try {
+        const oldMsg = await channel.messages.fetch(sticky.last_message_id);
+        if (oldMsg) {
+          await oldMsg.delete();
         }
+      } catch (deleteError) {
+        // Silence delete errors (e.g. if the message was already deleted manually)
+        logger.debug(`Could not delete previous sticky message ${sticky.last_message_id}: message may have already been deleted.`);
       }
     }
 
-    // Send the fresh sticky message at the bottom of the channel
-    await channel.send({
-      content: TEMPLATES.INTRO_STICKY
-    });
+    // 2. Send the fresh sticky message at the bottom
+    let sentMessage;
+    if (sticky.type === 'embed') {
+      let embedPayload = JSON.parse(sticky.payload);
+      
+      // Support wrapped Discohook format
+      if (embedPayload.messages && Array.isArray(embedPayload.messages) && embedPayload.messages.length > 0) {
+        embedPayload = embedPayload.messages[0].data || embedPayload.messages[0];
+      }
 
-    logger.info('Successfully repositioned sticky introduction template.');
+      const content = embedPayload.content || undefined;
+      const embeds = embedPayload.embeds || [];
+
+      sentMessage = await channel.send({
+        content,
+        embeds: embeds as any[]
+      });
+    } else {
+      const formattedText = sticky.payload.replace(/\\n/g, '\n');
+      sentMessage = await channel.send({
+        content: formattedText
+      });
+    }
+
+    // 3. Persist the new message ID in the database
+    await updateLastMessageId(message.channelId, sentMessage.id);
   } catch (error) {
-    logger.error('Failed to handle sticky introduction message:', error);
+    logger.error('Failed to reposition sticky message:', error);
   }
 }

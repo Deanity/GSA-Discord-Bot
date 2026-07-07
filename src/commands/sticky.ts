@@ -2,15 +2,17 @@ import {
   SlashCommandBuilder, 
   ChatInputCommandInteraction, 
   PermissionFlagsBits, 
-  TextChannel 
+  TextChannel,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle,
+  ActionRowBuilder
 } from 'discord.js';
 import { Command } from '../types/command.types.js';
 import { logger } from '../utils/logger.js';
 import { 
-  saveStickyConfig, 
   deleteStickyConfig, 
-  getStickyConfig, 
-  updateLastMessageId 
+  getStickyConfig 
 } from '../services/sticky.service.js';
 
 const stickyCommand: Command = {
@@ -30,11 +32,6 @@ const stickyCommand: Command = {
               { name: 'Plain Content (Teks)', value: 'content' }
             )
         )
-        .addStringOption(opt => 
-          opt.setName('payload')
-            .setDescription('Enter the plain text or JSON payload')
-            .setRequired(true)
-        )
     )
     .addSubcommand(sub => 
       sub.setName('remove')
@@ -53,83 +50,33 @@ const stickyCommand: Command = {
       return;
     }
 
-    await interaction.deferReply({ ephemeral: true });
-
     try {
       if (subcommand === 'set') {
         const type = interaction.options.getString('type', true) as 'embed' | 'content';
-        const payload = interaction.options.getString('payload', true);
 
-        // Verify JSON if it's an embed
-        if (type === 'embed') {
-          try {
-            const parsed = JSON.parse(payload);
-            if (typeof parsed !== 'object' || parsed === null) {
-              throw new Error('Payload must be an object');
-            }
-          } catch (e) {
-            await interaction.editReply({ 
-              content: '❌ **Format JSON tidak valid!** Pastikan payload JSON memiliki format yang benar.' 
-            });
-            return;
-          }
-        }
+        // Construct the modal builder
+        const modal = new ModalBuilder()
+          .setCustomId(`sticky_modal_${type}`)
+          .setTitle(type === 'embed' ? 'Set Sticky Embed JSON' : 'Set Sticky Text Content');
 
-        // Clean up previous sticky message from Discord if it exists
-        const existing = await getStickyConfig(channel.id);
-        if (existing && existing.last_message_id) {
-          try {
-            const msg = await channel.messages.fetch(existing.last_message_id);
-            if (msg) {
-              await msg.delete();
-            }
-          } catch (e) {
-            // Silence message delete error (e.g. if already deleted manually)
-          }
-        }
+        // Create the input fields
+        const payloadInput = new TextInputBuilder()
+          .setCustomId('sticky_payload')
+          .setLabel(type === 'embed' ? 'Paste the Discohook JSON payload' : 'Paste the multiline text content')
+          .setStyle(TextInputStyle.Paragraph)
+          .setPlaceholder(type === 'embed' ? '{"embeds": [{"title": "Rules", "description": "..."}]}' : 'Let\'s get to know each other!\n\nName:\nCollege:')
+          .setRequired(true);
 
-        // Persist sticky config in database
-        const saved = await saveStickyConfig(channel.id, type, payload);
-        if (!saved) {
-          await interaction.editReply({ 
-            content: '❌ **Gagal:** Terjadi kesalahan saat menyimpan konfigurasi ke database.' 
-          });
-          return;
-        }
+        const actionRow = new ActionRowBuilder<TextInputBuilder>().addComponents(payloadInput);
+        modal.addComponents(actionRow);
 
-        // Post the sticky message to the channel
-        let sentMessage;
-        if (type === 'embed') {
-          let embedPayload = JSON.parse(payload);
-          
-          // Support wrapped Discohook format
-          if (embedPayload.messages && Array.isArray(embedPayload.messages) && embedPayload.messages.length > 0) {
-            embedPayload = embedPayload.messages[0].data || embedPayload.messages[0];
-          }
-
-          const content = embedPayload.content || undefined;
-          const embeds = embedPayload.embeds || [];
-
-          sentMessage = await (channel as TextChannel).send({
-            content,
-            embeds: embeds as any[]
-          });
-        } else {
-          const formattedText = payload.replace(/\\n/g, '\n');
-          sentMessage = await (channel as TextChannel).send({
-            content: formattedText
-          });
-        }
-
-        // Save new message ID in database
-        await updateLastMessageId(channel.id, sentMessage.id);
-
-        await interaction.editReply({ 
-          content: '✅ **Sticky message berhasil dikonfigurasi dan diposting!**' 
-        });
-        logger.info(`Sticky message configured in channel ${channel.id} by ${interaction.user.tag}`);
+        // Display modal to the administrator (Cannot defer reply before calling showModal)
+        await interaction.showModal(modal);
+        logger.info(`Admin ${interaction.user.tag} triggered sticky set modal for type ${type} in channel ${channel.id}`);
 
       } else if (subcommand === 'remove') {
+        await interaction.deferReply({ ephemeral: true });
+
         const existing = await getStickyConfig(channel.id);
         if (!existing) {
           await interaction.editReply({ 
@@ -166,9 +113,17 @@ const stickyCommand: Command = {
       }
     } catch (error) {
       logger.error('Error executing sticky command:', error);
-      await interaction.editReply({ 
-        content: '❌ **Terjadi kesalahan internal saat memproses perintah.**' 
-      });
+      // Respond safely depending on interaction state
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ 
+          content: '❌ **Terjadi kesalahan internal saat memproses perintah.**' 
+        });
+      } else {
+        await interaction.reply({ 
+          content: '❌ **Terjadi kesalahan internal saat memproses perintah.**', 
+          ephemeral: true 
+        });
+      }
     }
   }
 };

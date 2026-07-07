@@ -1,6 +1,7 @@
 import { Interaction, Events, Collection, GuildMember, PermissionFlagsBits } from 'discord.js';
 import { logger } from '../utils/logger.js';
 import { Command } from '../types/command.types.js';
+import { handleStickySubmit } from '../services/sticky.service.js';
 
 interface ClientWithCommands {
   commands: Collection<string, Command>;
@@ -63,5 +64,36 @@ export async function execute(interaction: Interaction): Promise<void> {
   // 2. Handle Button Interactions
   if (interaction.isButton()) {
     // Placeholder for future button interactions
+  }
+
+  // 3. Handle Modal Submits
+  if (interaction.isModalSubmit()) {
+    const customId = interaction.customId;
+
+    if (customId.startsWith('sticky_modal_')) {
+      const type = customId.replace('sticky_modal_', '') as 'embed' | 'content';
+      const payload = interaction.fields.getTextInputValue('sticky_payload');
+
+      // Check if user is Administrator before executing
+      const member = interaction.member as GuildMember;
+      if (!member || !member.permissions.has(PermissionFlagsBits.Administrator)) {
+        await interaction.reply({ 
+          content: '❌ **Akses Ditolak:** Hanya anggota dengan izin Administrator yang dapat mengatur sticky message.', 
+          ephemeral: true 
+        });
+        return;
+      }
+
+      await interaction.deferReply({ ephemeral: true });
+
+      try {
+        await handleStickySubmit(interaction, type, payload);
+      } catch (error) {
+        logger.error('Error handling sticky modal submit:', error);
+        await interaction.editReply({ 
+          content: '❌ **Terjadi kesalahan saat memproses data sticky.**' 
+        });
+      }
+    }
   }
 }

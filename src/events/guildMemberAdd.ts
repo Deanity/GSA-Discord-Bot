@@ -47,7 +47,6 @@ export async function execute(member: GuildMember): Promise<void> {
       )
       .setColor(4359668) // Google Blue color code (0x4285F4 = 4359668 in decimal)
       .setImage("https://cdn.discordapp.com/attachments/1523686157269995600/1523686210080604261/arcade_july_header.png?ex=6a4d02dd&is=6a4bb15d&hm=3d0043d0c9b823afbe822e6f3145c0feda3ae4e3f106b184dc250baa5ff1d5e4&")
-      .setThumbnail("https://cdn.discordapp.com/attachments/1523686157269995600/1523688170150035557/image.png?ex=6a4d04b0&is=6a4bb330&hm=579247e4888f6c18cf0de5e6a8dce92ce4bbef8cb90d0f5bab93dde6f06015d3&")
       .setFooter({ text: SYSTEM.FOOTER_TEXT })
       .setTimestamp();
 

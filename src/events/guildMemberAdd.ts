@@ -31,19 +31,19 @@ export async function execute(member: GuildMember): Promise<void> {
 
     const welcomeEmbed = new EmbedBuilder()
       
-      .setTitle("SELAMAT DATANG DI ARCADE COMMUNITY!")
+      .setTitle("WELCOME TO THE ARCADE COMMUNITY!")
       .setDescription(
-        `Selamat datang di server koordinasi resmi Google Skills Arcade 2026!\n\n` +
-        `Halo **${member}**! Server ini adalah wadah belajar, berbagi progres, dan ruang diskusi santai selama kamu mengikuti program Arcade.\n\n` +
+        `Welcome to the official Google Skills Arcade 2026 coordination server!\n\n` +
+        `Hey **${member}**! This server is your space to learn, share progress, and have casual discussions throughout the Arcade program.\n\n` +
         `━━━━━━━━━━━━━━━━━━━━━\n\n` +
-        `**3 LANGKAH AWAL KAMU:**\n\n` +
-        `**1. Cek Pengumuman** - Pantau <#1523644848522006717> untuk info terbaru & jadwal penting.\n` +
-        `**2. Aturan Server** - Baca tata tertib di <#1523644848522006718> demi kenyamanan bersama.\n` +
-        `**3. Say Hello!** - Yuk, kenalan dengan sesama *players* & Fasilitator di <#1523654046974480554>.\n\n` +
+        `**YOUR FIRST 3 STEPS:**\n\n` +
+        `**1. Check Announcements** - Follow <#1523644848522006717> for the latest updates & important schedules.\n` +
+        `**2. Server Rules** - Read the guidelines in <#1523644848522006718> to keep things comfortable for everyone.\n` +
+        `**3. Say Hello!** - Come introduce yourself to fellow *players* & Facilitators in <#1523654046974480554>.\n\n` +
         `━━━━━━━━━━━━━━━━━━━━━\n\n` +
-        `> *“Gunakan kesempatan ini untuk mengasah skill, mengumpulkan lencana (badges), dan menyelesaikan tantangan di Google Cloud!”*\n\n` +
-        `Ada kendala atau pertanyaan? Jangan ragu hubungi para Fasilitator di sini. \n\n` +
-        `**Selamat belajar & seru-seruan bareng di The Arcade! 🏆**`
+        `> *"Use this opportunity to sharpen your skills, collect badges, and complete challenges on Google Cloud!"*\n\n` +
+        `Got any issues or questions? Don't hesitate to reach out to the Facilitators here.\n\n` +
+        `**Happy learning & have a blast at The Arcade! 🏆**`
       )
       .setColor(4359668) // Google Blue color code (0x4285F4 = 4359668 in decimal)
       .setImage("https://cdn.discordapp.com/attachments/1523686157269995600/1523686210080604261/arcade_july_header.png?ex=6a4d02dd&is=6a4bb15d&hm=3d0043d0c9b823afbe822e6f3145c0feda3ae4e3f106b184dc250baa5ff1d5e4&")
@@ -51,7 +51,7 @@ export async function execute(member: GuildMember): Promise<void> {
       .setTimestamp();
 
     await channel.send({
-      content: `**SELAMAT DATANG DI ARCADE COMMUNITY! ${member}**`,
+      content: `**WELCOME TO THE ARCADE COMMUNITY! ${member}**`,
       embeds: [welcomeEmbed]
     });
     
